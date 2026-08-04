@@ -1,0 +1,66 @@
+// 置顶项目：手动维护描述（不受 GitHub API 影响）
+export const PINNED_PERSONAL_PROJECTS = [
+  {
+    title: "ComfyUI-GuliNodes",
+    domain: "github.com",
+    url: "https://github.com/guliacer/ComfyUI-GuliNodes",
+    description: "ComfyUI 工具合集，囊括多种有用节点与工具。",
+    tags: ["个人项目", "ComfyUI", "节点扩展"],
+  },
+  {
+    title: "Prompt Polish 提示词优化器",
+    domain: "github.com",
+    url: "https://github.com/guliacer/prompt-polish",
+    description: "轻量级桌面提示词优化器，完整整合提示词润色功能。",
+    tags: ["个人项目", "提示词优化", "桌面工具"],
+  },
+  {
+    title: "GetPhoto 图像提取",
+    domain: "github.com",
+    url: "https://github.com/guliacer/GetPhoto",
+    description: "油猴插件，适配多站点，支持小红书 AI 爬图。",
+    tags: ["个人项目", "油猴插件", "图像提取"],
+  },
+  {
+    title: "PagePurifier 网页优化",
+    domain: "github.com",
+    url: "https://github.com/guliacer/PagePurifier",
+    description: "油猴插件，拉黑 B 站广告 UP，精简网页广告。",
+    tags: ["个人项目", "油猴插件", "网页净化"],
+  },
+  {
+    title: "Preview 网页图像悬浮工具",
+    domain: "github.com",
+    url: "https://github.com/guliacer/preview",
+    description: "油猴插件，鼠标悬停即可查看图像大图。",
+    tags: ["个人项目", "油猴插件", "图像预览"],
+  },
+  {
+    title: "VeilReader 网页摸鱼小说工具",
+    domain: "github.com",
+    url: "https://github.com/guliacer/VeilReader",
+    description: "油猴插件，摸鱼的钱才是你赚到的钱。",
+    tags: ["个人项目", "油猴插件", "摸鱼阅读"],
+  },
+  {
+    title: "CookClick 网页美化",
+    domain: "github.com",
+    url: "https://github.com/guliacer/cookclick",
+    description: "油猴插件，点击网页随机生成符号。",
+    tags: ["个人项目", "油猴插件", "网页美化"],
+  },
+  {
+    title: "PixGo",
+    domain: "github.com",
+    url: "https://github.com/guliacer/PixGo",
+    description: "改善索尼相机无线传图。",
+    tags: ["个人项目", "软件", "无线传图"],
+  },
+  {
+    title: "新闻 HTML 日报",
+    domain: "github.com",
+    url: "https://github.com/guliacer/news-html-digest",
+    description: "Skill 脚本，抓取新闻，消除信息差。",
+    tags: ["个人项目", "Skill", "新闻抓取"],
+  },
+];

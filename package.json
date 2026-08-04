@@ -1,0 +1,21 @@
+{
+  "name": "resource-recommendations",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "资源推荐可视化网页 - 个人项目 / 友情项目 / API 网站 / 提示词网站 / 生图网站",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "echarts": "^6.1.0",
+    "vue": "^3.5.40",
+    "vue-echarts": "^8.0.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.2.0"
+  }
+}

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>资源推荐</title>
+<style>
+  :root {
+    --color-background: #f6f5f1;
+    --color-foreground: #202521;
+    --color-panel: #fbfaf7;
+    --color-muted: #7e8580;
+    --color-border: #dddcd4;
+    --color-primary: #6f867e;
+    --color-primary-strong: #536962;
+    --color-primary-soft: #eef1ec;
+    --color-primary-foreground: #ffffff;
+    --color-warning: #d96a3a;
+    --shadow-elevated: 0 8px 24px rgb(15 23 42 / 9%);
+    --shadow-image: 0 16px 36px rgb(15 23 42 / 14%);
+
+    --color-capsule-sage: #e7ede4;
+    --color-capsule-sage-foreground: #42594d;
+    --color-capsule-sage-border: #c9d5c6;
+    --color-capsule-mist: #e2e9ee;
+    --color-capsule-mist-foreground: #435663;
+    --color-capsule-mist-border: #c4d0d8;
+    --color-capsule-clay: #eee3dc;
+    --color-capsule-clay-foreground: #665048;
+    --color-capsule-clay-border: #d8c6bb;
+    --color-capsule-lavender: #e8e4ee;
+    --color-capsule-lavender-foreground: #574f68;
+    --color-capsule-lavender-border: #cec6d8;
+    --color-capsule-fog: #e8ebe8;
+    --color-capsule-fog-foreground: #515a54;
+    --color-capsule-fog-border: #cdd3ce;
+    --color-capsule-rose: #eee2e4;
+    --color-capsule-rose-foreground: #664d55;
+    --color-capsule-rose-border: #d8c4ca;
+    --color-capsule-sand: #eee8dc;
+    --color-capsule-sand-foreground: #625846;
+    --color-capsule-sand-border: #d8ceb8;
+    --color-capsule-stone: #e7e4df;
+    --color-capsule-stone-foreground: #59554d;
+    --color-capsule-stone-border: #cfcbc3;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: Inter, "Segoe UI", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+    padding: 32px 24px 64px;
+  }
+
+  .grid { display: grid; }
+  .gap-5 { gap: 1.25rem; }
+  .gap-3 { gap: 0.75rem; }
+  .gap-2 { gap: 0.5rem; }
+
+  header.page-header { display: grid; gap: 0.5rem; }
+  header.page-header .label {
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.025em; color: var(--color-muted);
+  }
+  .page-title-row {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem;
+  }
+  .page-title { min-width: 0; }
+  .page-title h1 { font-size: 1.5rem; font-weight: 600; color: var(--color-foreground); margin: 0; }
+  .page-title p {
+    margin: 0.5rem 0 0; max-width: 48rem; font-size: 0.875rem; line-height: 1.5rem; color: var(--color-muted);
+  }
+  .count-badge {
+    border-radius: 9999px; border: 1px solid var(--color-border); background: var(--color-panel);
+    padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 500; color: var(--color-muted);
+  }
+
+  section.recommendation-section { display: grid; gap: 0.75rem; }
+  .section-header {
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent); padding-bottom: 0.5rem;
+  }
+  .section-header .title { min-width: 0; }
+  .section-header h2 { font-size: 1.125rem; font-weight: 600; color: var(--color-foreground); margin: 0; }
+  .section-header p {
+    margin: 0.25rem 0 0; max-width: 48rem; font-size: 0.75rem; line-height: 1.25rem; color: var(--color-muted);
+  }
+
+  .cards-grid {
+    display: grid; gap: 0.75rem;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  @media (min-width: 760px) { .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1180px) { .cards-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  .card {
+    display: grid; overflow: hidden; border-radius: 0.75rem; border: 1px solid var(--color-border);
+    background: var(--color-panel); box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-image); }
+
+  .card-header {
+    display: flex; min-height: 2.5rem; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid var(--color-border); padding: 0.5rem 1rem;
+  }
+  .card-header .title-wrap { min-width: 0; flex: 1; }
+  .card-header h3 {
+    margin: 0; font-size: 1rem; font-weight: 600; color: var(--color-foreground);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  .card-body { display: grid; gap: 0.5rem; padding: 1rem; }
+  .card-desc {
+    margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden; font-size: 0.875rem; line-height: 1.25rem; color: var(--color-muted);
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+  .tag {
+    border-radius: 9999px; border: 1px solid var(--color-border); padding: 0.125rem 0.5rem;
+    font-size: 11px; line-height: 1.25rem;
+  }
+  .actions { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding-top: 0.25rem; }
+  .btn {
+    display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; gap: 0.5rem;
+    border-radius: 0.75rem; border: 1px solid var(--color-border); background: var(--color-panel);
+    color: var(--color-foreground); padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500;
+    line-height: 1; cursor: pointer; text-decoration: none; box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevated); }
+  .icon-btn {
+    display: inline-flex; width: 2.25rem; height: 2.25rem; align-items: center; justify-content: center;
+    border-radius: 0.5rem; border: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-panel) 85%, transparent);
+    box-shadow: 0 1px 2px rgb(15 23 42 / 5%); cursor: pointer; text-decoration: none;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .icon-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevated); }
+  .icon-btn svg { width: 15px; height: 15px; }
+
+  .card-header .tone-solid {
+    border-radius: 0.5rem; padding: 0.125rem 0.625rem; font-size: 0.75rem; font-weight: 600;
+  }
+
+  /* capsule tones */
+  .tone-sage .card-header { background: var(--color-capsule-sage); color: var(--color-capsule-sage-foreground); border-bottom-color: var(--color-capsule-sage-border); }
+  .tone-sage { border-color: var(--color-capsule-sage-border); }
+  .tone-sage .tag { border-color: var(--color-capsule-sage-border); background: var(--color-capsule-sage); color: var(--color-capsule-sage-foreground); }
+  .tone-sage .btn { border-color: var(--color-capsule-sage-border); color: var(--color-capsule-sage-foreground); }
+  .tone-sage .btn:hover { background: var(--color-capsule-sage); }
+  .tone-sage .icon-btn { border-color: var(--color-capsule-sage-border); color: var(--color-capsule-sage-foreground); }
+
+  .tone-mist .card-header { background: var(--color-capsule-mist); color: var(--color-capsule-mist-foreground); border-bottom-color: var(--color-capsule-mist-border); }
+  .tone-mist { border-color: var(--color-capsule-mist-border); }
+  .tone-mist .tag { border-color: var(--color-capsule-mist-border); background: var(--color-capsule-mist); color: var(--color-capsule-mist-foreground); }
+  .tone-mist .btn { border-color: var(--color-capsule-mist-border); color: var(--color-capsule-mist-foreground); }
+  .tone-mist .btn:hover { background: var(--color-capsule-mist); }
+  .tone-mist .icon-btn { border-color: var(--color-capsule-mist-border); color: var(--color-capsule-mist-foreground); }
+
+  .tone-clay .card-header { background: var(--color-capsule-clay); color: var(--color-capsule-clay-foreground); border-bottom-color: var(--color-capsule-clay-border); }
+  .tone-clay { border-color: var(--color-capsule-clay-border); }
+  .tone-clay .tag { border-color: var(--color-capsule-clay-border); background: var(--color-capsule-clay); color: var(--color-capsule-clay-foreground); }
+  .tone-clay .btn { border-color: var(--color-capsule-clay-border); color: var(--color-capsule-clay-foreground); }
+  .tone-clay .btn:hover { background: var(--color-capsule-clay); }
+  .tone-clay .icon-btn { border-color: var(--color-capsule-clay-border); color: var(--color-capsule-clay-foreground); }
+
+  .tone-lavender .card-header { background: var(--color-capsule-lavender); color: var(--color-capsule-lavender-foreground); border-bottom-color: var(--color-capsule-lavender-border); }
+  .tone-lavender { border-color: var(--color-capsule-lavender-border); }
+  .tone-lavender .tag { border-color: var(--color-capsule-lavender-border); background: var(--color-capsule-lavender); color: var(--color-capsule-lavender-foreground); }
+  .tone-lavender .btn { border-color: var(--color-capsule-lavender-border); color: var(--color-capsule-lavender-foreground); }
+  .tone-lavender .btn:hover { background: var(--color-capsule-lavender); }
+  .tone-lavender .icon-btn { border-color: var(--color-capsule-lavender-border); color: var(--color-capsule-lavender-foreground); }
+
+  .tone-fog .card-header { background: var(--color-capsule-fog); color: var(--color-capsule-fog-foreground); border-bottom-color: var(--color-capsule-fog-border); }
+  .tone-fog { border-color: var(--color-capsule-fog-border); }
+  .tone-fog .tag { border-color: var(--color-capsule-fog-border); background: var(--color-capsule-fog); color: var(--color-capsule-fog-foreground); }
+  .tone-fog .btn { border-color: var(--color-capsule-fog-border); color: var(--color-capsule-fog-foreground); }
+  .tone-fog .btn:hover { background: var(--color-capsule-fog); }
+  .tone-fog .icon-btn { border-color: var(--color-capsule-fog-border); color: var(--color-capsule-fog-foreground); }
+
+  .tone-rose .card-header { background: var(--color-capsule-rose); color: var(--color-capsule-rose-foreground); border-bottom-color: var(--color-capsule-rose-border); }
+  .tone-rose { border-color: var(--color-capsule-rose-border); }
+  .tone-rose .tag { border-color: var(--color-capsule-rose-border); background: var(--color-capsule-rose); color: var(--color-capsule-rose-foreground); }
+  .tone-rose .btn { border-color: var(--color-capsule-rose-border); color: var(--color-capsule-rose-foreground); }
+  .tone-rose .btn:hover { background: var(--color-capsule-rose); }
+  .tone-rose .icon-btn { border-color: var(--color-capsule-rose-border); color: var(--color-capsule-rose-foreground); }
+
+  .tone-sand .card-header { background: var(--color-capsule-sand); color: var(--color-capsule-sand-foreground); border-bottom-color: var(--color-capsule-sand-border); }
+  .tone-sand { border-color: var(--color-capsule-sand-border); }
+  .tone-sand .tag { border-color: var(--color-capsule-sand-border); background: var(--color-capsule-sand); color: var(--color-capsule-sand-foreground); }
+  .tone-sand .btn { border-color: var(--color-capsule-sand-border); color: var(--color-capsule-sand-foreground); }
+  .tone-sand .btn:hover { background: var(--color-capsule-sand); }
+  .tone-sand .icon-btn { border-color: var(--color-capsule-sand-border); color: var(--color-capsule-sand-foreground); }
+
+  .tone-stone .card-header { background: var(--color-capsule-stone); color: var(--color-capsule-stone-foreground); border-bottom-color: var(--color-capsule-stone-border); }
+  .tone-stone { border-color: var(--color-capsule-stone-border); }
+  .tone-stone .tag { border-color: var(--color-capsule-stone-border); background: var(--color-capsule-stone); color: var(--color-capsule-stone-foreground); }
+  .tone-stone .btn { border-color: var(--color-capsule-stone-border); color: var(--color-capsule-stone-foreground); }
+  .tone-stone .btn:hover { background: var(--color-capsule-stone); }
+  .tone-stone .icon-btn { border-color: var(--color-capsule-stone-border); color: var(--color-capsule-stone-foreground); }
+
+  .tone-primary .card-header { background: var(--color-primary-soft); color: var(--color-primary); border-bottom-color: color-mix(in srgb, var(--color-primary) 25%, transparent); }
+  .tone-primary { border-color: color-mix(in srgb, var(--color-primary) 30%, transparent); }
+  .tone-primary .tag { border-color: color-mix(in srgb, var(--color-primary) 35%, transparent); background: var(--color-primary-soft); color: var(--color-primary); }
+  .tone-primary .btn { border-color: color-mix(in srgb, var(--color-primary) 35%, transparent); color: var(--color-primary); }
+  .tone-primary .btn:hover { background: var(--color-primary-soft); }
+  .tone-primary .icon-btn { border-color: color-mix(in srgb, var(--color-primary) 30%, transparent); color: var(--color-primary); }
+</style>
+</head>
+<body>
+  <div class="grid gap-5" id="root"></div>
+
+  <script>
+    const PINNED_PROMPT_SITE_URL = "https://ai.wuyeshen.de5.net/";
+    const SECOND_PINNED_PROMPT_SITE_URL = "https://pan.quark.cn/s/3b60f26d43a8";
+
+    const TONES = ["sage", "mist", "rose", "sand", "lavender", "clay", "primary", "stone"];
+
+    const promptSiteRecommendations = [
+      { title: "视觉提示词学习库", domain: "ai.wuyeshen.de5.net", url: PINNED_PROMPT_SITE_URL, description: "AI 提示词与图像灵感站点，浏览案例并复用 Prompt。", tags: ["提示词", "图像灵感", "案例参考"] },
+      { title: "远古大呲花-提示词网盘", domain: "pan.quark.cn", url: SECOND_PINNED_PROMPT_SITE_URL, description: "整理的提示词知识库网盘，学习写法、案例和结构。", tags: ["提示词网盘", "资源分享", "案例学习"] },
+      { title: "OpenNana", domain: "opennana.com", url: "https://opennana.com/?ref=4H8CJGZM", description: "Nano Banana / GPT Image 2 提示词图库，浏览效果图并复制 Prompt。", tags: ["Nano Banana", "GPT Image 2", "提示词图库"] },
+      { title: "YouMind Seedance 2.0", domain: "youmind.com", url: "https://youmind.com/zh-CN/seedance-2-0-prompts", description: "Seedance 2.0 视频提示词库，在线看生成效果并复用提示词。", tags: ["Seedance 2.0", "视频提示词", "案例合集"] },
+      { title: "prompts.chat", domain: "prompts.chat", url: "https://prompts.chat/prompts", description: "AI Prompt 社区，浏览文本/图像提示词与作者案例。", tags: ["Prompt 社区", "文本提示词", "案例分享"] },
+      { title: "KookAIGC 图库", domain: "kookaigc.top", url: "https://kookaigc.top/?view=gallery", description: "AIGC 效果图库，查找视觉参考与提示词灵感。", tags: ["AIGC 图库", "效果参考", "提示词灵感"] },
+      { title: "即梦AI", domain: "jimeng.jianying.com", url: "https://jimeng.jianying.com/ai-tool/home", description: "剪映 AI 创作工具，参考中文图像、视频玩法和提示词。", tags: ["中文工具", "图像视频", "创作灵感"] },
+      { title: "civitai（C站）", domain: "civitai.red", url: "https://civitai.red/images", description: "C站图片灵感页，参考 SD 作品、模型效果和提示词。", tags: ["模型社区", "SD 生态", "图片案例"] },
+      { title: "LibLibAI", domain: "liblib.art", url: "https://www.liblib.art/inspiration", description: "中文 AI 灵感库，查找图片案例、模型风格和提示词。", tags: ["中文灵感", "图像案例", "模型参考"] },
+      { title: "awesome-gpt-image-2", domain: "gpt-image2.canghe.ai", url: "https://gpt-image2.canghe.ai", description: "GPT Image 2 案例导航，浏览多题材提示词和效果。", tags: ["GPT Image 2", "案例导航", "图像生成"] },
+      { title: "aiart.pics", domain: "aiart.pics", url: "https://aiart.pics", description: "AI 艺术案例站，查找摄影、人物、产品和视觉参考。", tags: ["AI 艺术", "提示词案例", "视觉参考"] },
+      { title: "提示词填空器", domain: "promptfill.tanshilong.com", url: "https://promptfill.tanshilong.com/explore", description: "提示词填空工具，拆分可替换参数并查看主题案例。", tags: ["参数填空", "提示词拆解", "案例探索"] },
+      { title: "AI 图片 Prompt 案例库", domain: "webtomind.com", url: "https://webtomind.com/zh-CN/prompts", description: "中文图片 Prompt 案例库，收集题材和复用结构。", tags: ["中文案例库", "图像 Prompt", "题材分类"] },
+      { title: "LeaderAI 立得AI", domain: "www.leaderai.top", url: "https://www.leaderai.top/#/preset-prompt-page", description: "设计师提示词预设页，查找图像创作和设计灵感。", tags: ["提示词预设", "设计灵感", "中文页面"] },
+      { title: "哗啦哗啦广场", domain: "img.xmiaom.com", url: "https://img.xmiaom.com", description: "中文 AI 图片广场，浏览热门作品和提示词灵感。", tags: ["中文图片广场", "热门作品", "提示词灵感"] },
+      { title: "上码 UPMA 图片提示词", domain: "upma.cn", url: "https://www.upma.cn/image-prompts", description: "GPT Image 2 生图案例库，参考中文案例和提示词结构。", tags: ["GPT Image 2", "中文案例", "图片 Prompt"] },
+      { title: "SeaArt AI", domain: "seaart.ai", url: "https://www.seaart.ai/explore", description: "AI 创作社区，查看模型效果、角色和场景案例。", tags: ["创作社区", "图片探索", "模型案例"] },
+    ];
+
+    const personalProjectRecommendations = [
+      { title: "ComfyUI-GuliNodes", domain: "github.com", url: "https://github.com/guliacer/ComfyUI-GuliNodes", description: "ComfyUI 工具合集，囊括多种有用节点与工具。", tags: ["个人项目", "ComfyUI", "节点扩展"] },
+      { title: "Prompt Polish 提示词优化器", domain: "github.com", url: "https://github.com/guliacer/prompt-polish", description: "轻量级桌面提示词优化器，完整整合提示词润色功能。", tags: ["个人项目", "提示词优化", "桌面工具"] },
+      { title: "GetPhoto 图像提取", domain: "github.com", url: "https://github.com/guliacer/GetPhoto", description: "油猴插件，适配多站点，支持小红书 AI 爬图。", tags: ["个人项目", "油猴插件", "图像提取"] },
+      { title: "PagePurifier 网页优化", domain: "github.com", url: "https://github.com/guliacer/PagePurifier", description: "油猴插件，拉黑 B 站广告 UP，精简网页广告。", tags: ["个人项目", "油猴插件", "网页净化"] },
+      { title: "Preview 网页图像悬浮工具", domain: "github.com", url: "https://github.com/guliacer/preview", description: "油猴插件，鼠标悬停即可查看图像大图。", tags: ["个人项目", "油猴插件", "图像预览"] },
+      { title: "VeilReader 网页摸鱼小说工具", domain: "github.com", url: "https://github.com/guliacer/VeilReader", description: "油猴插件，摸鱼的钱才是你赚到的钱。", tags: ["个人项目", "油猴插件", "摸鱼阅读"] },
+      { title: "CookClick 网页美化", domain: "github.com", url: "https://github.com/guliacer/cookclick", description: "油猴插件，点击网页随机生成符号。", tags: ["个人项目", "油猴插件", "网页美化"] },
+      { title: "PixGo", domain: "github.com", url: "https://github.com/guliacer/PixGo", description: "改善索尼相机无线传图。", tags: ["个人项目", "软件", "无线传图"] },
+      { title: "新闻 HTML 日报", domain: "github.com", url: "https://github.com/guliacer/news-html-digest", description: "Skill 脚本，抓取新闻，消除信息差。", tags: ["个人项目", "Skill", "新闻抓取"] },
+    ];
+
+    const friendProjectRecommendations = [
+      { title: "ComfyNexus", domain: "github.com", url: "https://github.com/Allen-xxa/ComfyNexus", description: "最好用的 ComfyUI 启动器。", tags: ["友情项目", "ComfyUI", "启动器"] },
+      { title: "提示词小助手", domain: "github.com", url: "https://github.com/yawiii/ComfyUI-Prompt-Assistant", description: "最好用的提示词优化工具。", tags: ["友情项目", "ComfyUI", "提示词优化"] },
+    ];
+
+    const apiSiteRecommendations = [
+      { title: "商汤 token-plan", domain: "platform.sensenova.cn", url: "https://platform.sensenova.cn/console", description: "免费模型，手机号登陆，不可签到。", tags: ["API 网站", "商汤", "免费模型"] },
+      { title: "斑马 API", domain: "bmapi.020212.xyz", url: "https://bmapi.020212.xyz/register?aff=VFNVKJJYLQQR", description: "QQ 邮箱登录，签到送 100 积分。", tags: ["API 网站", "免费额度", "签到积分"] },
+      { title: "哈基米", domain: "api.gemai.cc", url: "https://api.gemai.cc/sign-up?aff=AM58", description: "QQ 邮箱登录，签到送少量额度。", tags: ["API 网站", "免费额度", "签到额度"] },
+      { title: "Guyscode", domain: "www.guyscode.com", url: "https://www.guyscode.com/register?aff=5TEUB7CZEJCS", description: "QQ 邮箱登录，签到送少量额度。", tags: ["API 网站", "免费额度", "签到额度"] },
+      { title: "RouterTeam", domain: "ai.router.team", url: "https://ai.router.team/register?invite=4Q2MQZFC", description: "QQ 邮箱登录，签到送少量额度。", tags: ["API 网站", "免费额度", "签到额度"] },
+      { title: "rua.chat", domain: "api.rua.chat", url: "https://api.rua.chat/sign-up?aff=DQM1", description: "QQ 邮箱登录，签到送少量额度。", tags: ["API 网站", "免费额度", "签到额度"] },
+      { title: "咕嘎咕嘎", domain: "ai.xmiaom.com", url: "https://ai.xmiaom.com/sign-up?aff=bibi", description: "微信或 GitHub 注册，签到送少量额度。", tags: ["API 网站", "微信注册", "签到额度"] },
+      { title: "小旋风", domain: "console.xiaoxuanfeng.cc", url: "https://console.xiaoxuanfeng.cc/register?aff=5T38TJVNM4X6", description: "QQ 邮箱注册，不可签到，但价格较低。", tags: ["API 网站", "QQ 邮箱", "低价中转"] },
+      { title: "FastAI 模型", domain: "www.fastaitoken.com", url: "https://www.fastaitoken.com/register?aff=S8F8YJY426VA", description: "QQ 邮箱注册，不可签到，但价格较低。", tags: ["API 网站", "QQ 邮箱", "低价模型"] },
+    ];
+
+    const imageGenSiteRecommendations = [
+      { title: "ChatGPT Image", domain: "chatgpt.com", url: "https://chatgpt.com", description: "OpenAI GPT 图像生成，提示词理解强，适合人物、插画和海报。", tags: ["综合助手", "免费额度", "GPT 生图"] },
+      { title: "Gemini + Nano Banana", domain: "gemini.google.com", url: "https://gemini.google.com", description: "Google 图像模型，图片编辑强，人物一致性优秀。", tags: ["综合助手", "免费额度", "人物一致"] },
+      { title: "Grok Imagine", domain: "grok.com", url: "https://grok.com", description: "xAI 创意生成开放，风格丰富。", tags: ["综合助手", "免费额度", "创意风格"] },
+      { title: "豆包 Doubao", domain: "doubao.com", url: "https://www.doubao.com", description: "字节 AI 助手，中文理解优秀，头像、插画、海报方便。", tags: ["综合助手", "免费", "中文生图"] },
+      { title: "千问 Qianwen", domain: "qianwen.com", url: "https://www.qianwen.com", description: "阿里官方 AI 助手，支持多模态创作。", tags: ["综合助手", "免费额度", "多模态"] },
+      { title: "通义千问 Qwen Chat", domain: "chat.qwen.ai", url: "https://chat.qwen.ai", description: "Qwen 官方聊天入口，支持图片生成。", tags: ["综合助手", "免费额度", "Qwen 生图"] },
+      { title: "腾讯元宝", domain: "yuanbao.tencent.com", url: "https://yuanbao.tencent.com/", description: "腾讯混元大模型，支持图片生成与多模态问答。", tags: ["综合助手", "免费额度", "混元模型"] },
+      { title: "Microsoft Copilot Chat", domain: "m365.cloud.microsoft", url: "https://m365.cloud.microsoft/chat", description: "微软 AI 助手，支持图片生成，办公场景结合强（视账号权限）。", tags: ["综合助手", "免费额度", "办公场景"] },
+      { title: "文心一言 ERNIE", domain: "yiyan.baidu.com", url: "https://yiyan.baidu.com", description: "百度 AI 助手，支持图片创作。", tags: ["综合助手", "免费额度", "百度生图"] },
+      { title: "智谱清言", domain: "chatglm.cn", url: "https://chatglm.cn", description: "GLM 大模型，支持多模态创作。", tags: ["综合助手", "部分免费", "GLM 模型"] },
+      { title: "Kimi", domain: "kimi.moonshot.cn", url: "https://kimi.moonshot.cn", description: "月之暗面 AI 助手，长文本强，具备多模态能力。", tags: ["综合助手", "部分支持", "多模态"] },
+      { title: "讯飞星火", domain: "xinghuo.xfyun.cn", url: "https://xinghuo.xfyun.cn", description: "科大讯飞大模型，支持图像创作。", tags: ["综合助手", "部分免费", "讯飞模型"] },
+      { title: "天工 AI", domain: "tiangong.cn", url: "https://www.tiangong.cn", description: "昆仑万维 AI 助手，支持图像生成。", tags: ["综合助手", "免费额度", "天工模型"] },
+      { title: "360 智脑", domain: "ai.360.com", url: "https://ai.360.com", description: "360 AI 助手，支持图片生成。", tags: ["综合助手", "免费", "360 模型"] },
+      { title: "通义万相", domain: "tongyi.aliyun.com", url: "https://tongyi.aliyun.com/wanxiang", description: "阿里专业 AI 绘画，中文提示词理解强。", tags: ["专业生图", "免费额度", "中文绘画"] },
+      { title: "可灵 AI", domain: "klingai.com", url: "https://klingai.com", description: "快手可灵，支持图片与视频生成。", tags: ["专业生图", "免费积分", "图片视频"] },
+      { title: "即梦 AI", domain: "jimeng.jianying.com", url: "https://jimeng.jianying.com", description: "字节跳动生图产品，中文体验好。", tags: ["专业生图", "免费", "中文体验"] },
+      { title: "文心一格", domain: "yige.baidu.com", url: "https://yige.baidu.com", description: "百度 AI 绘画平台。", tags: ["专业生图", "免费额度", "百度绘画"] },
+      { title: "Leonardo AI", domain: "leonardo.ai", url: "https://leonardo.ai", description: "游戏原画与概念设计生图平台。", tags: ["专业生图", "每日额度", "游戏原画"] },
+      { title: "Ideogram", domain: "ideogram.ai", url: "https://ideogram.ai", description: "海报文字生成优秀的生图平台。", tags: ["专业生图", "免费额度", "文字海报"] },
+      { title: "Adobe Firefly", domain: "firefly.adobe.com", url: "https://firefly.adobe.com", description: "Adobe 商业设计生图，商用友好。", tags: ["专业生图", "免费积分", "商业设计"] },
+      { title: "Microsoft Designer", domain: "designer.microsoft.com", url: "https://designer.microsoft.com", description: "微软海报设计与办公图片生成。", tags: ["设计工具", "免费", "海报设计"] },
+      { title: "Canva AI", domain: "canva.com", url: "https://www.canva.com", description: "社媒设计与海报制作的 AI 工具。", tags: ["设计工具", "免费额度", "社媒海报"] },
+      { title: "美图 WHEE", domain: "whee.com", url: "https://www.whee.com", description: "美图 AI 生图，擅长人像与美化。", tags: ["设计工具", "免费额度", "人像美图"] },
+      { title: "堆友 AI", domain: "d.design", url: "https://d.design", description: "阿里电商设计与商品图生成。", tags: ["设计工具", "免费", "电商商品图"] },
+      { title: "SeaArt AI", domain: "seaart.ai", url: "https://www.seaart.ai", description: "模型丰富的 AI 生图社区。", tags: ["模型社区", "免费积分", "模型丰富"] },
+      { title: "LiblibAI", domain: "liblib.art", url: "https://www.liblib.art", description: "国内 SD 社区，模型与作品丰富。", tags: ["模型社区", "免费", "SD 社区"] },
+      { title: "Civitai", domain: "civitai.com", url: "https://civitai.com", description: "全球最大 SD 模型社区。", tags: ["模型社区", "部分免费", "SD 模型"] },
+      { title: "Tensor.Art", domain: "tensor.art", url: "https://tensor.art", description: "支持 SDXL / Flux 模型的生图社区。", tags: ["模型社区", "免费额度", "SDXL / Flux"] },
+      { title: "Playground AI", domain: "playground.com", url: "https://playground.com", description: "支持图片生成与编辑的生图平台。", tags: ["模型社区", "免费额度", "图片编辑"] },
+    ];
+
+    const sections = [
+      { id: "personal-projects", title: "个人项目", description: "自研节点、脚本和小工具，覆盖图像抓取、网页效率、传图与信息聚合。", items: personalProjectRecommendations },
+      { id: "friend-projects", title: "友情项目", description: "推荐的 ComfyUI 启动器、提示词优化工具和知识库。", items: friendProjectRecommendations },
+      { id: "api-sites", title: "API 网站推荐", description: "提供免费额度或签到福利的 API 中转站。", items: apiSiteRecommendations },
+      { id: "prompt-sites", title: "提示词网站推荐", description: "常用提示词社区、图像灵感库和官方提示词资料。", items: promptSiteRecommendations },
+      { id: "image-gen-sites", title: "生图网站推荐", description: "综合助手、专业绘画、设计工具和模型社区，多为免费额度的在线生图平台。", items: imageGenSiteRecommendations },
+    ];
+
+    function rankPinned(url) {
+      if (url === PINNED_PROMPT_SITE_URL) return 0;
+      if (url === SECOND_PINNED_PROMPT_SITE_URL) return 1;
+      return 2;
+    }
+
+    function orderRecommendations(items) {
+      return items
+        .map((site, index) => ({ site, index }))
+        .sort((a, b) => {
+          const aP = rankPinned(a.site.url);
+          const bP = rankPinned(b.site.url);
+          if (aP !== bP) return aP - bP;
+          return a.index - b.index;
+        })
+        .map((e) => e.site);
+    }
+
+    const ExternalLinkIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
+    const GlobeIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>';
+    const StarIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (c) => ({
+        "&": "&", "<": "<", ">": ">", '"': """, "'": "&#39;",
+      })[c]);
+    }
+
+    function renderCard(site, toneName) {
+      const tagsHtml = site.tags
+        .map((t) => `<span class="tag">${escapeHtml(t)}</span>`)
+        .join("");
+      return `
+        <article class="card tone-${toneName}">
+          <div class="card-header">
+            <div class="title-wrap">
+              <h3>${escapeHtml(site.title)}</h3>
+            </div>
+            <a class="icon-btn" href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" title="复制网址" aria-label="复制网址：${escapeHtml(site.title)}">
+              ${StarIcon}
+            </a>
+          </div>
+          <div class="card-body">
+            <p class="card-desc">${escapeHtml(site.description)}</p>
+            <div class="tags">${tagsHtml}</div>
+            <div class="actions">
+              <a class="btn" href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">
+                ${ExternalLinkIcon}<span>查看</span>
+              </a>
+              <a class="icon-btn" href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer" title="复制网址" aria-label="复制网址：${escapeHtml(site.title)}">
+                ${GlobeIcon}
+              </a>
+            </div>
+          </div>
+        </article>`;
+    }
+
+    function renderSection(section) {
+      const ordered = orderRecommendations(section.items);
+      const cardsHtml = ordered
+        .map((site) => {
+          const originalIndex = section.items.indexOf(site);
+          const toneName = TONES[originalIndex % TONES.length];
+          return renderCard(site, toneName);
+        })
+        .join("");
+      return `
+        <section class="recommendation-section">
+          <div class="section-header">
+            <div class="title">
+              <h2>${escapeHtml(section.title)}</h2>
+              <p>${escapeHtml(section.description)}</p>
+            </div>
+            <span class="count-badge">${section.items.length} 个</span>
+          </div>
+          <div class="cards-grid">${cardsHtml}</div>
+        </section>`;
+    }
+
+    function render() {
+      const root = document.getElementById("root");
+      const total = sections.reduce((sum, s) => sum + s.items.length, 0);
+      const sectionsHtml = sections.map(renderSection).join("");
+      root.innerHTML = `
+        <header class="page-header">
+          <p class="label">资源推荐</p>
+          <div class="page-title-row">
+            <div class="page-title">
+              <h1>资源推荐</h1>
+              <p>收集插件、脚本、软件、自动化技能和提示词网站，覆盖 AI 创作、网页效率与图像灵感。</p>
+            </div>
+            <span class="count-badge">${total} 个推荐</span>
+          </div>
+        </header>
+        ${sectionsHtml}`;
+    }
+
+    render();
+  </script>
+</body>
+</html>
