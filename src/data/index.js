@@ -6,6 +6,9 @@ import { proxySiteRecommendations } from "./proxySites.js";
 import { imageGenSiteRecommendations } from "./imageGenSites.js";
 import { promptSiteRecommendations } from "./promptSites.js";
 
+// 静态条目的日期表示最后一次核验，而不是第三方网站自身的内容更新时间。
+export const CATALOG_UPDATED_AT = "2026-08-04";
+
 // 静态分类（不需要 API）
 const staticSections = [
   {

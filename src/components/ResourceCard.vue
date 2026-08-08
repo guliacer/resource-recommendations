@@ -3,7 +3,21 @@
     <div class="card-header">
       <div class="title-wrap">
         <h3>{{ item.title }}</h3>
-        <span class="domain">{{ item.domain }}</span>
+        <div class="title-meta">
+          <span class="domain">{{ item.domain }}</span>
+          <span
+            class="updated-at"
+            :class="{ stale: isStale, missing: !hasUpdatedAt }"
+            :title="updatedStatus"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            {{ hasUpdatedAt ? `${item.updatedAtLabel || "更新于"} ${formattedUpdatedAt}` : "未记录更新时间" }}
+          </span>
+          <span v-if="isStale" class="stale-badge">需复核</span>
+        </div>
       </div>
       <button
         class="fav-btn"
@@ -52,13 +66,126 @@
           </svg>
           复制
         </button>
+        <button
+          class="btn btn-view"
+          :disabled="!hasImages"
+          :title="hasImages ? `查看 ${item.title} 的图片` : '暂无图片'"
+          :aria-label="hasImages ? `查看 ${item.title} 的图片` : `${item.title} 暂无图片`"
+          @click="openViewer"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <circle cx="8.5" cy="9" r="1.5" />
+            <path d="m21 15-4.5-4.5L7 20" />
+          </svg>
+          查看
+          <span v-if="hasImages" class="btn-count">{{ imageSources.length }}</span>
+        </button>
+        <a
+          v-if="hasCheckinLink"
+          class="btn btn-checkin"
+          :href="item.checkinUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          :title="`打开 ${item.title} 签到页`"
+          :aria-label="`打开 ${item.title} 签到页`"
+          @click.prevent="openCheckinLink"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="17" rx="2" />
+            <path d="M8 2v4M16 2v4M3 10h18" />
+            <path d="m8 15 2 2 5-5" />
+          </svg>
+          签到
+        </a>
+        <a
+          v-if="hasPurchaseLink"
+          class="btn btn-purchase"
+          :href="item.purchaseUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          :title="`购买 ${item.title} 注册码`"
+          :aria-label="`购买 ${item.title} 注册码`"
+          @click.prevent="openPurchaseLink"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 8h12l1 12H5L6 8Z" />
+            <path d="M9 8a3 3 0 0 1 6 0" />
+          </svg>
+          购买
+        </a>
       </div>
     </div>
   </article>
+
+  <Teleport to="body">
+    <div
+      v-if="viewerOpen"
+      ref="viewerEl"
+      class="image-viewer"
+      tabindex="-1"
+      role="presentation"
+      @click.self="closeViewer"
+      @keydown.esc="closeViewer"
+      @keydown.left.prevent="previousImage"
+      @keydown.right.prevent="nextImage"
+    >
+      <section class="image-dialog" role="dialog" aria-modal="true" :aria-label="`${item.title} 图片预览`">
+        <header class="image-dialog-header">
+          <div class="image-dialog-title">
+            <span class="image-dialog-kicker">图片预览</span>
+            <h2>{{ item.title }}</h2>
+          </div>
+          <button class="viewer-close" type="button" title="关闭预览" aria-label="关闭预览" @click="closeViewer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </header>
+
+        <div
+          class="image-stage"
+          @touchstart="handleTouchStart"
+          @touchend="handleTouchEnd"
+        >
+          <button class="viewer-nav viewer-nav-prev" type="button" title="上一张" aria-label="上一张" @click="previousImage">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <img :src="currentImage" :alt="`${item.title} 图片 ${activeImageIndex + 1}`" />
+          <button class="viewer-nav viewer-nav-next" type="button" title="下一张" aria-label="下一张" @click="nextImage">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="image-dialog-footer">
+          <div class="image-counter" aria-live="polite">{{ activeImageIndex + 1 }} / {{ imageSources.length }}</div>
+          <div class="image-thumbs" role="list" aria-label="图片缩略图">
+            <button
+              v-for="(image, index) in imageSources"
+              :key="image"
+              class="image-thumb"
+              :class="{ active: index === activeImageIndex }"
+              type="button"
+              :title="`查看第 ${index + 1} 张`"
+              :aria-label="`查看第 ${index + 1} 张图片`"
+              :aria-current="index === activeImageIndex ? 'true' : undefined"
+              @click="showImage(index)"
+            >
+              <img :src="image" :alt="`${item.title} 缩略图 ${index + 1}`" />
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </Teleport>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useFavorites } from "../composables/useFavorites.js";
 import { useToast } from "../composables/useToast.js";
 import { useFilters } from "../composables/useFilters.js";
@@ -73,6 +200,42 @@ const { copyText, push } = useToast();
 const { activeTag, searchQuery, activeCategory } = useFilters();
 
 const isFav = computed(() => isFavorite(props.item.url));
+const imageSources = computed(() =>
+  Array.isArray(props.item.images) ? props.item.images.filter(Boolean) : []
+);
+const hasImages = computed(() => imageSources.value.length > 0);
+const hasCheckinLink = computed(() => Boolean(props.item.checkinUrl));
+const hasPurchaseLink = computed(() => Boolean(props.item.purchaseUrl));
+const updatedDate = computed(() => {
+  if (!props.item.updatedAt) return null;
+  const date = new Date(props.item.updatedAt);
+  return Number.isNaN(date.getTime()) ? null : date;
+});
+const hasUpdatedAt = computed(() => Boolean(updatedDate.value));
+const formattedUpdatedAt = computed(() => {
+  if (!updatedDate.value) return "";
+  return new Intl.DateTimeFormat("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(updatedDate.value).replaceAll("/", "-");
+});
+const isStale = computed(() => {
+  if (!updatedDate.value) return true;
+  const staleAfterDays = Number(props.item.staleAfterDays ?? 30);
+  const ageDays = (Date.now() - updatedDate.value.getTime()) / 86400000;
+  return ageDays > (Number.isFinite(staleAfterDays) && staleAfterDays > 0 ? staleAfterDays : 30);
+});
+const updatedStatus = computed(() => {
+  if (!updatedDate.value) return "没有记录条目更新时间";
+  return isStale.value ? "条目超过复核周期，建议重新确认" : "条目在复核周期内";
+});
+const viewerOpen = ref(false);
+const activeImageIndex = ref(0);
+const currentImage = computed(() => imageSources.value[activeImageIndex.value] || "");
+const viewerEl = ref(null);
+const touchStartX = ref(null);
+const previousBodyOverflow = ref("");
 
 function handleFav() {
   const wasFavorite = isFavorite(props.item.url);
@@ -98,6 +261,68 @@ function openLink() {
 function copyUrl() {
   copyText(props.item.url);
 }
+
+function openPurchaseLink() {
+  if (!hasPurchaseLink.value) return;
+  window.open(props.item.purchaseUrl, "_blank", "noopener,noreferrer");
+}
+
+function openCheckinLink() {
+  if (!hasCheckinLink.value) return;
+  window.open(props.item.checkinUrl, "_blank", "noopener,noreferrer");
+}
+
+function openViewer() {
+  if (!hasImages.value) return;
+  activeImageIndex.value = 0;
+  viewerOpen.value = true;
+}
+
+function closeViewer() {
+  viewerOpen.value = false;
+}
+
+function showImage(index) {
+  if (!hasImages.value) return;
+  activeImageIndex.value = (index + imageSources.value.length) % imageSources.value.length;
+}
+
+function previousImage() {
+  showImage(activeImageIndex.value - 1);
+}
+
+function nextImage() {
+  showImage(activeImageIndex.value + 1);
+}
+
+function handleTouchStart(event) {
+  touchStartX.value = event.changedTouches?.[0]?.clientX ?? null;
+}
+
+function handleTouchEnd(event) {
+  if (touchStartX.value === null) return;
+  const endX = event.changedTouches?.[0]?.clientX ?? touchStartX.value;
+  const distance = endX - touchStartX.value;
+  touchStartX.value = null;
+  if (Math.abs(distance) < 40) return;
+  if (distance > 0) previousImage();
+  else nextImage();
+}
+
+watch(viewerOpen, async (open) => {
+  if (open) {
+    previousBodyOverflow.value = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    await nextTick();
+    viewerEl.value?.focus();
+  } else {
+    document.body.style.overflow = previousBodyOverflow.value;
+  }
+});
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = previousBodyOverflow.value;
+});
 </script>
 
 <style scoped>
@@ -138,6 +363,14 @@ function copyUrl() {
   min-width: 0;
 }
 
+.title-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  min-width: 0;
+}
+
 h3 {
   margin: 0;
   font-size: 0.9375rem;
@@ -152,6 +385,32 @@ h3 {
   color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.updated-at {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.updated-at.stale,
+.updated-at.missing {
+  color: var(--danger);
+}
+
+.stale-badge {
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
+  border-radius: 9999px;
+  padding: 0.08rem 0.35rem;
+  color: var(--danger);
+  background: var(--danger-soft);
+  font-size: 0.64rem;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
@@ -228,6 +487,7 @@ h3 {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
 }
@@ -260,6 +520,212 @@ h3 {
 .btn-primary:hover {
   background: var(--accent-strong);
   box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.btn-view {
+  color: var(--text-secondary);
+}
+
+.btn-checkin {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border-strong));
+  color: var(--accent-strong);
+}
+
+.btn-checkin:hover {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-1));
+}
+
+.btn-purchase {
+  border-color: color-mix(in srgb, #d97706 42%, var(--border-strong));
+  color: #a16207;
+}
+
+.btn-purchase:hover {
+  background: color-mix(in srgb, #f59e0b 12%, var(--surface-1));
+}
+
+:root[data-theme="dark"] .btn-purchase {
+  color: #f5c26b;
+}
+
+.btn-view:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  transform: none;
+}
+
+.btn-count {
+  min-width: 1rem;
+  padding: 0 0.22rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-size: 0.68rem;
+  line-height: 1.1rem;
+  text-align: center;
+}
+
+.image-viewer {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(5px);
+}
+
+.image-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(62rem, 100%);
+  max-height: min(46rem, calc(100vh - 2rem));
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.75rem;
+  background: var(--surface-1);
+  box-shadow: var(--shadow-raised);
+}
+
+.image-dialog-header,
+.image-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.image-dialog-header {
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.image-dialog-title {
+  min-width: 0;
+}
+
+.image-dialog-kicker {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.image-dialog-title h2 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viewer-close,
+.viewer-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.viewer-close {
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+}
+
+.viewer-close:hover,
+.viewer-nav:hover {
+  background: var(--surface-2);
+}
+
+.image-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 18rem;
+  height: min(62vh, 34rem);
+  background: #101416;
+  touch-action: pan-y;
+}
+
+.image-stage > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.viewer-nav {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-color: rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.58);
+  color: #fff;
+  transform: translateY(-50%);
+}
+
+.viewer-nav:hover {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.viewer-nav-prev { left: 0.75rem; }
+.viewer-nav-next { right: 0.75rem; }
+
+.image-dialog-footer {
+  align-items: flex-start;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.image-counter {
+  flex-shrink: 0;
+  padding-top: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.image-thumbs {
+  display: flex;
+  gap: 0.4rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.1rem;
+}
+
+.image-thumb {
+  width: 4.25rem;
+  height: 3rem;
+  flex: 0 0 auto;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 0.375rem;
+  background: var(--surface-2);
+  cursor: pointer;
+  opacity: 0.62;
+}
+
+.image-thumb.active,
+.image-thumb:hover {
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+.image-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Capsule tones */
@@ -325,4 +791,32 @@ h3 {
 .tone-primary .tag:hover { background: color-mix(in srgb, var(--primary) 40%, transparent); }
 .tone-primary .fav-btn { border-color: color-mix(in srgb, var(--primary) 30%, transparent); color: var(--primary); }
 .tone-primary .fav-btn:hover { background: color-mix(in srgb, var(--primary) 20%, transparent); }
+
+@media (max-width: 640px) {
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .image-viewer {
+    padding: 0.5rem;
+  }
+
+  .image-dialog {
+    max-height: calc(100vh - 1rem);
+  }
+
+  .image-stage {
+    min-height: 14rem;
+    height: 54vh;
+  }
+
+  .image-dialog-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .image-thumbs {
+    width: 100%;
+  }
+}
 </style>

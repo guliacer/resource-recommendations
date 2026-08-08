@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { staticSections, loadPersonalSection } from "./data/index.js";
+import { CATALOG_UPDATED_AT, staticSections, loadPersonalSection } from "./data/index.js";
 import { useFilters } from "./composables/useFilters.js";
 import { useFavorites } from "./composables/useFavorites.js";
 import { useTheme } from "./composables/useTheme.js";
@@ -128,7 +128,13 @@ function toggleSection(id) {
 
 function getSectionItems(sec) {
   return filterItems(
-    sec.items.map((item, i) => ({ ...item, _uid: `${sec.id}-${i}`, sectionId: sec.id }))
+    sec.items.map((item, i) => ({
+      ...item,
+      updatedAt: item.updatedAt || CATALOG_UPDATED_AT,
+      updatedAtLabel: item.updatedAtLabel || (item.updatedAt ? "更新于" : "核验于"),
+      _uid: `${sec.id}-${i}`,
+      sectionId: sec.id,
+    }))
   );
 }
 

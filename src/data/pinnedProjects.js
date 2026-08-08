@@ -1,10 +1,29 @@
 // 置顶项目：手动维护描述（不受 GitHub API 影响）
 export const PINNED_PERSONAL_PROJECTS = [
   {
+    title: "SuYan",
+    domain: "github.com",
+    url: "https://github.com/guliacer/SuYan",
+    description: "为 AI 创作者整理、复用和打磨提示词而生。",
+    tags: ["个人项目", "提示词"],
+  },
+  {
+    title: "TapRelay-remote-adapter-test",
+    domain: "github.com",
+    url: "https://github.com/guliacer/TapRelay-remote-adapter-test",
+    description: "TapRelay 远程适配器测试项目。",
+    tags: ["个人项目", "测试工具"],
+  },
+  {
     title: "ComfyUI-GuliNodes",
     domain: "github.com",
     url: "https://github.com/guliacer/ComfyUI-GuliNodes",
     description: "ComfyUI 工具合集，囊括多种有用节点与工具。",
+    images: [
+      "/images/comfyui-gulinodes/screenshot-1.png",
+      "/images/comfyui-gulinodes/screenshot-2.png",
+      "/images/comfyui-gulinodes/screenshot-3.png",
+    ],
     tags: ["个人项目", "ComfyUI", "节点扩展"],
   },
   {
@@ -19,6 +38,12 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/GetPhoto",
     description: "油猴插件，适配多站点，支持小红书 AI 爬图。",
+    images: [
+      "/images/getphoto/screenshot-1.png",
+      "/images/getphoto/screenshot-2.png",
+      "/images/getphoto/screenshot-3.png",
+      "/images/getphoto/screenshot-4.png",
+    ],
     tags: ["个人项目", "油猴插件", "图像提取"],
   },
   {
@@ -26,6 +51,13 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/PagePurifier",
     description: "油猴插件，拉黑 B 站广告 UP，精简网页广告。",
+    images: [
+      "/images/pagepurifier/screenshot-1.png",
+      "/images/pagepurifier/screenshot-2.png",
+      "/images/pagepurifier/screenshot-3.png",
+      "/images/pagepurifier/screenshot-4.png",
+      "/images/pagepurifier/screenshot-5.png",
+    ],
     tags: ["个人项目", "油猴插件", "网页净化"],
   },
   {
@@ -33,6 +65,11 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/preview",
     description: "油猴插件，鼠标悬停即可查看图像大图。",
+    images: [
+      "/images/preview/screenshot-1.png",
+      "/images/preview/screenshot-2.png",
+      "/images/preview/screenshot-3.png",
+    ],
     tags: ["个人项目", "油猴插件", "图像预览"],
   },
   {
@@ -40,6 +77,11 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/VeilReader",
     description: "油猴插件，摸鱼的钱才是你赚到的钱。",
+    images: [
+      "/images/veilreader/screenshot-1.png",
+      "/images/veilreader/screenshot-2.png",
+      "/images/veilreader/screenshot-3.png",
+    ],
     tags: ["个人项目", "油猴插件", "摸鱼阅读"],
   },
   {
@@ -47,6 +89,9 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/cookclick",
     description: "油猴插件，点击网页随机生成符号。",
+    images: [
+      "/images/cookclick/screenshot-1.png",
+    ],
     tags: ["个人项目", "油猴插件", "网页美化"],
   },
   {
@@ -54,6 +99,15 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/PixGo",
     description: "改善索尼相机无线传图。",
+    images: [
+      "/images/pixgo/screenshot-1.png",
+      "/images/pixgo/screenshot-2.png",
+      "/images/pixgo/screenshot-3.png",
+      "/images/pixgo/screenshot-4.png",
+      "/images/pixgo/screenshot-5.png",
+      "/images/pixgo/screenshot-6.png",
+      "/images/pixgo/screenshot-7.png",
+    ],
     tags: ["个人项目", "软件", "无线传图"],
   },
   {
@@ -61,6 +115,10 @@ export const PINNED_PERSONAL_PROJECTS = [
     domain: "github.com",
     url: "https://github.com/guliacer/news-html-digest",
     description: "Skill 脚本，抓取新闻，消除信息差。",
+    images: [
+      "/images/news-html-digest/screenshot-1.png",
+      "/images/news-html-digest/screenshot-2.png",
+    ],
     tags: ["个人项目", "Skill", "新闻抓取"],
   },
 ];
