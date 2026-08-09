@@ -189,6 +189,7 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { useFavorites } from "../composables/useFavorites.js";
 import { useToast } from "../composables/useToast.js";
 import { useFilters } from "../composables/useFilters.js";
+import { resolveAssetUrls } from "../utils/resolveAssetUrl.js";
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -201,7 +202,7 @@ const { activeTag, searchQuery, activeCategory } = useFilters();
 
 const isFav = computed(() => isFavorite(props.item.url));
 const imageSources = computed(() =>
-  Array.isArray(props.item.images) ? props.item.images.filter(Boolean) : []
+  resolveAssetUrls(Array.isArray(props.item.images) ? props.item.images : [])
 );
 const hasImages = computed(() => imageSources.value.length > 0);
 const hasCheckinLink = computed(() => Boolean(props.item.checkinUrl));
